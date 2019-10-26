@@ -56,4 +56,20 @@ class Client
             return $result['domains'][0];
         }
     }
+
+    public function updateDnsEntry($dnsRecordId, $content = null, $ttl = null)
+    {
+        $record = [];
+
+        if (is_string($content) && strlen($content) > 0) {
+            $record['content'] = $content;
+        }
+
+        $url = sprintf('/api/dns/%s', $dnsRecordId);
+        $response = $this->client->put($url, ['form_params' => $record]);
+
+        $result = json_decode((string) $response->getBody(), true);
+
+        return $result['succeeded'];
+    }
 }

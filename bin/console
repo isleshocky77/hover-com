@@ -3,6 +3,7 @@
 require __DIR__.'/../vendor/autoload.php';
 
 use isleshocky77\HoverCom\Command\DnsCommand;
+use isleshocky77\HoverCom\Command\DnsUpdateCommand;
 use isleshocky77\HoverCom\Command\DomainsCommand;
 use isleshocky77\HoverCom\Command\LoginCommand;
 use Symfony\Component\Console\Application;
@@ -16,5 +17,6 @@ $application = new Application();
 $application->add(new LoginCommand());
 $application->add(new DomainsCommand());
 $application->add(new DnsCommand());
+$application->add(new DnsUpdateCommand());
 
 $application->run();
