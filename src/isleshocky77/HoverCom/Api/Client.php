@@ -4,8 +4,12 @@
 namespace isleshocky77\HoverCom\Api;
 
 
+use Concat\Http\Middleware\RateLimiter;
 use GuzzleHttp\Cookie\CookieJar as CookieJarAlias;
 use GuzzleHttp\Cookie\FileCookieJar;
+use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\HandlerStack;
+use isleshocky77\Guzzle\Handler\RateLimit\Provider\FileProvider;
 
 class Client
 {
@@ -16,10 +20,17 @@ class Client
     public function __construct()
     {
         $cookieJar = new FileCookieJar(__DIR__ . '/../../../../.cookiejar.json', true);
+
+        $handler = new CurlHandler();
+        $handlerStack = HandlerStack::create($handler);
+        $rateLimitProvider = new FileProvider();
+        $handlerStack->push(new RateLimiter($rateLimitProvider));
+
         $this->client = new \GuzzleHttp\Client([
             'base_uri' => 'https://www.hover.com',
             'timeout'  => 2.0,
             'cookies' => $cookieJar,
+            'handler' => $handlerStack,
         ]);
     }
 
