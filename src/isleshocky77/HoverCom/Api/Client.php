@@ -5,6 +5,7 @@ namespace isleshocky77\HoverCom\Api;
 
 
 use GuzzleHttp\Cookie\CookieJar as CookieJarAlias;
+use GuzzleHttp\Cookie\FileCookieJar;
 
 class Client
 {
@@ -14,11 +15,11 @@ class Client
 
     public function __construct()
     {
-        $jar = new CookieJarAlias();
+        $cookieJar = new FileCookieJar(__DIR__ . '/../../../../.cookiejar.json', true);
         $this->client = new \GuzzleHttp\Client([
             'base_uri' => 'https://www.hover.com',
             'timeout'  => 2.0,
-            'cookies' => $jar,
+            'cookies' => $cookieJar,
         ]);
     }
 
@@ -27,8 +28,8 @@ class Client
         $this->client->request('POST', '/api/login', [
             'form_params' => [
                 'username' => $username,
-                'password' => getenv('HOVER_PASSWORD'),
-            ]
+                'password' => $password,
+            ],
         ]);
 
         $this->isLoggedIn = true;
@@ -36,6 +37,7 @@ class Client
 
     public function getDomains()
     {
+        $jar = new FileCookieJar(__DIR__ . '/../../../..//.cookiejar.json');
         $response = $this->client->get('/api/domains');
 
         $result = json_decode((string) $response->getBody(), true);

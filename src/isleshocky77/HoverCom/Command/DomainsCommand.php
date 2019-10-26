@@ -22,8 +22,6 @@ class DomainsCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $api = new \isleshocky77\HoverCom\Api\Client();
-        $api->login(getenv('HOVER_USERNAME'), getenv('HOVER_PASSWORD'));
-
         $domains = $api->getDomains();
 
         $table = new Table($output);
