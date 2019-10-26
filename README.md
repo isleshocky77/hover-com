@@ -9,4 +9,4 @@ This is a command line utility for managing Hover.com written in PHP
 3. To list available commands run `./bin/console`
 4. To list domains run `./bin/console hover.com:domains:list`
 5. To list all dns entries of listed domains which match content ` ./bin/console hover-com:dns:list --filter-content="123.123.123.123" dom123456 dom654321 dom66666`
-6. To update a dns entry `./bin/console hover-com:dns:update dns123456 --content="1.1.1.1"`
+6. To update a dns entry `./bin/console hover-com:dns:update --content="1.1.1.1" dns123456 dns654321`
