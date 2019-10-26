@@ -8,3 +8,4 @@ This is a command line utility for managing Hover.com written in PHP
 2. Run `composer install`
 3. To list available commands run `./bin/console`
 4. To list domains run `./bin/console hover.com:domains:list`
+5. To list all dns entries of listed domains which match content ` ./bin/console hover-com:dns:list --filter-content="123.123.123.123" dom123456 dom654321 dom66666`
