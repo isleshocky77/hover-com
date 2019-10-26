@@ -1,0 +1,10 @@
+# Hover.com Command-line Utility
+
+This is a command line utility for managing Hover.com written in PHP
+
+## Usage
+
+1. Copy `.env.dist` to `.env` and update the file with your correct username and password
+2. Run `composer install`
+3. To list available commands run `./bin/console`
+4. To list domains run `./bin/console hover.com:domains:list`

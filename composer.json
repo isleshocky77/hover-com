@@ -1,0 +1,23 @@
+{
+    "name": "isleshocky77/hover-com",
+    "description": "This is a command line utility for managing Hover.com written in PHP",
+    "keywords": ["hover.com", "php"],
+    "homepage": "https://github.com/isleshocky77/hover-com",
+    "license": "GPL3",
+    "authors": [
+        {
+            "name": "Stephen Ostrow",
+            "email": "stephen@ostrow.tech",
+            "homepage": "http://ostrow.tech",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "~6.0",
+        "symfony/console": "^4.3",
+        "vlucas/phpdotenv": "^3.6"
+    },
+    "autoload": {
+        "psr-4": {"isleshocky77\\": "src/isleshocky77"}
+    }
+}
