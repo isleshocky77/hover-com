@@ -11,3 +11,12 @@ This is a command line utility for managing Hover.com written in PHP
 5. To list all dns entries of listed domains which match content ` ./bin/console hover-com:dns:list --filter-content="123.123.123.123" dom123456 dom654321 dom66666`
 6. To update a dns entry `./bin/console hover-com:dns:update --content="1.1.1.1" dns123456 dns654321`
 7. To delete a dns entry `./bin/console hover-com:dns:delete dns123456 dns654321`
+
+
+## Docker
+
+```bash
+$ docker-compose build
+$ docker-compose run console
+$ docker-compose run console hover-com:domains:list
+```
