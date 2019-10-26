@@ -45,6 +45,8 @@ class Client
         if ($result['succeeded'] === true) {
             return $result['domains'];
         }
+
+        throw new \RuntimeException($result['error']);
     }
 
     public function getDns($domain)
@@ -57,6 +59,8 @@ class Client
         if ($result['succeeded'] === true) {
             return $result['domains'][0];
         }
+
+        throw new \RuntimeException($result['error']);
     }
 
     public function updateDnsEntry($dnsRecordId, $content = null, $ttl = null)
