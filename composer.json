@@ -15,9 +15,7 @@
     "require": {
         "guzzlehttp/guzzle": "~6.0",
         "symfony/console": "^4.3",
-        "vlucas/phpdotenv": "^3.6",
-        "rtheunissen/guzzle-rate-limiter": "^2.0",
-        "symfony/cache": "^4.3"
+        "vlucas/phpdotenv": "^3.6"
     },
     "autoload": {
         "psr-4": {"isleshocky77\\": "src/isleshocky77"}

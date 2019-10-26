@@ -7,8 +7,13 @@ namespace isleshocky77\HoverCom\Api;
 use Concat\Http\Middleware\RateLimiter;
 use GuzzleHttp\Cookie\CookieJar as CookieJarAlias;
 use GuzzleHttp\Cookie\FileCookieJar;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use isleshocky77\Guzzle\Handler\RateLimit\Provider\FileProvider;
 
 class Client
@@ -21,10 +26,8 @@ class Client
     {
         $cookieJar = new FileCookieJar(__DIR__ . '/../../../../.cookiejar.json', true);
 
-        $handler = new CurlHandler();
-        $handlerStack = HandlerStack::create($handler);
-        $rateLimitProvider = new FileProvider();
-        $handlerStack->push(new RateLimiter($rateLimitProvider));
+        $handlerStack = HandlerStack::create(new CurlHandler());
+        $handlerStack->push( Middleware::retry(self::retryDecider(), self::retryDelay()));
 
         $this->client = new \GuzzleHttp\Client([
             'base_uri' => 'https://www.hover.com',
@@ -32,6 +35,40 @@ class Client
             'cookies' => $cookieJar,
             'handler' => $handlerStack,
         ]);
+    }
+
+    private static function retryDecider() {
+        return function (
+            $retries,
+            Request $request,
+            Response $response = null,
+            RequestException $exception = null
+        ) {
+            // Limit the number of retries to 5
+            if ( $retries >= 5 ) {
+                return false;
+            }
+
+            // Retry connection exceptions
+            if( $exception instanceof ConnectException ) {
+                return true;
+            }
+
+            if( $response ) {
+                // Retry on server errors
+                if( $response->getStatusCode() >= 500 ) {
+                    return true;
+                }
+            }
+
+            return false;
+        };
+    }
+
+    private static function retryDelay() {
+        return function( $numberOfRetries ) {
+            return 1000 * $numberOfRetries;
+        };
     }
 
     public function login($username, $password)
