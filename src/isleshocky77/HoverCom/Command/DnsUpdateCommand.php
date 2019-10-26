@@ -2,11 +2,9 @@
 
 namespace isleshocky77\HoverCom\Command;
 
-use GuzzleHttp\Client;
+use isleshocky77\HoverCom\Api\Client;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Helper\TableCell;
-use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -25,7 +23,7 @@ class DnsUpdateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $api = new \isleshocky77\HoverCom\Api\Client();
+        $api = new Client();
 
         $table = new Table($output);
         $table->setHeaders(['ID', 'Name', 'Type', 'Content', 'TTL', 'Is Default']);
@@ -35,7 +33,7 @@ class DnsUpdateCommand extends Command
         $ttl = $input->getOption('ttl');
 
         foreach ($dnsRecordIds as $dnsRecordId) {
-            $dnss = $api->updateDnsEntry($dnsRecordId, $content, $ttl);
+            $api->updateDnsEntry($dnsRecordId, $content, $ttl);
         }
 
         $table->render();
