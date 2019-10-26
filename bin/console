@@ -3,6 +3,7 @@
 require __DIR__.'/../vendor/autoload.php';
 
 use isleshocky77\HoverCom\Command\DnsCommand;
+use isleshocky77\HoverCom\Command\DnsDeleteCommand;
 use isleshocky77\HoverCom\Command\DnsUpdateCommand;
 use isleshocky77\HoverCom\Command\DomainsCommand;
 use isleshocky77\HoverCom\Command\LoginCommand;
@@ -18,5 +19,6 @@ $application->add(new LoginCommand());
 $application->add(new DomainsCommand());
 $application->add(new DnsCommand());
 $application->add(new DnsUpdateCommand());
+$application->add(new DnsDeleteCommand());
 
 $application->run();

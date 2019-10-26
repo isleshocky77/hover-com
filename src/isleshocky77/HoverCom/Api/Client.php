@@ -126,4 +126,13 @@ class Client
 
         return $result['succeeded'];
     }
+
+    public function deleteDnsEntry($dnsRecordId)
+    {   $url = sprintf('/api/dns/%s', $dnsRecordId);
+        $response = $this->client->delete($url);
+
+        $result = json_decode((string) $response->getBody(), true);
+
+        return $result['succeeded'];
+    }
 }
