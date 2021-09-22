@@ -1,11 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace isleshocky77\HoverCom\Api;
 
-
-use Concat\Http\Middleware\RateLimiter;
-use GuzzleHttp\Cookie\CookieJar as CookieJarAlias;
 use GuzzleHttp\Cookie\FileCookieJar;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
@@ -14,12 +13,9 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
-use isleshocky77\Guzzle\Handler\RateLimit\Provider\FileProvider;
 
 class Client
 {
-    private $isLoggedIn = false;
-
     private $client;
 
     public function __construct()
@@ -37,13 +33,14 @@ class Client
         ]);
     }
 
-    private static function retryDecider() {
-        return function (
+    private static function retryDecider(): \Closure
+    {
+        return static function (
             $retries,
             Request $request,
             Response $response = null,
             RequestException $exception = null
-        ) {
+        ) : bool {
             // Limit the number of retries to 5
             if ( $retries >= 5 ) {
                 return false;
@@ -54,24 +51,26 @@ class Client
                 return true;
             }
 
-            if( $response ) {
-                // Retry on server errors
-                if( $response->getStatusCode() >= 500 ) {
-                    return true;
-                }
+            // Retry on server errors
+            if($response && $response->getStatusCode() >= 500) {
+                return true;
             }
 
             return false;
         };
     }
 
-    private static function retryDelay() {
-        return function( $numberOfRetries ) {
+    private static function retryDelay(): \Closure
+    {
+        return static function($numberOfRetries ) {
             return 1000 * $numberOfRetries;
         };
     }
 
-    public function login($username, $password)
+    /**
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function login($username, $password): void
     {
         $this->client->request('POST', '/api/login', [
             'form_params' => [
@@ -79,13 +78,10 @@ class Client
                 'password' => $password,
             ],
         ]);
-
-        $this->isLoggedIn = true;
     }
 
-    public function getDomains()
+    public function getDomains() : array
     {
-        $jar = new FileCookieJar(__DIR__ . '/../../../..//.cookiejar.json');
         $response = $this->client->get('/api/domains');
 
         $result = json_decode((string) $response->getBody(), true);
@@ -97,7 +93,7 @@ class Client
         throw new \RuntimeException($result['error']);
     }
 
-    public function getDns($domain)
+    public function getDns($domain) : array
     {
         $url = sprintf('/api/domains/%s/dns', $domain);
         $response = $this->client->get($url);
@@ -111,11 +107,11 @@ class Client
         throw new \RuntimeException($result['error']);
     }
 
-    public function updateDnsEntry($dnsRecordId, $content = null, $ttl = null)
+    public function updateDnsEntry(string $dnsRecordId, ?string $content = null, ?int $ttl = null): bool
     {
         $record = [];
 
-        if (is_string($content) && strlen($content) > 0) {
+        if (is_string($content) && $content !== '') {
             $record['content'] = $content;
         }
 
@@ -127,8 +123,9 @@ class Client
         return $result['succeeded'];
     }
 
-    public function deleteDnsEntry($dnsRecordId)
-    {   $url = sprintf('/api/dns/%s', $dnsRecordId);
+    public function deleteDnsEntry($dnsRecordId) : bool
+    {
+        $url = sprintf('/api/dns/%s', $dnsRecordId);
         $response = $this->client->delete($url);
 
         $result = json_decode((string) $response->getBody(), true);

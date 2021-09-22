@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace isleshocky77\HoverCom\Command;
 
 use isleshocky77\HoverCom\Api\Client;
@@ -11,7 +13,7 @@ class LoginCommand extends Command
 {
     protected static $defaultName = 'hover-com:login';
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $api = new Client();
 
@@ -20,6 +22,10 @@ class LoginCommand extends Command
             $output->write("Success for user " . getenv('HOVER_USERNAME'));
         } catch (\Exception $e) {
             $output->write("Login Failed for user " . getenv('HOVER_USERNAME'));
+
+            return 1;
         }
+
+        return 0;
     }
 }

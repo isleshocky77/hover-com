@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace isleshocky77\HoverCom\Command;
 
 use GuzzleHttp\Client;
@@ -16,7 +18,7 @@ class DnsCommand extends Command
 {
     protected static $defaultName = 'hover-com:dns:list';
 
-    protected function configure()
+    protected function configure() : void
     {
         $this->addArgument('domains', InputArgument::IS_ARRAY, 'The domain(s) to list DNS for');
         $this->addOption('filter-type', null, InputOption::VALUE_OPTIONAL, 'The types of records to filter and show');
@@ -24,7 +26,7 @@ class DnsCommand extends Command
         $this->addOption('filter-content', null, InputOption::VALUE_OPTIONAL, 'The record content to filter and show');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $api = new \isleshocky77\HoverCom\Api\Client();
 
@@ -40,17 +42,17 @@ class DnsCommand extends Command
             foreach ($dnss['entries'] as $dns) {
 
                 $filterType = $input->getOption('filter-type');
-                if($filterType && $dns['type'] != $filterType) {
+                if($filterType && $dns['type'] !== $filterType) {
                     continue;
                 }
 
                 $filterName = $input->getOption('filter-name');
-                if($filterName && $dns['name'] != $filterName) {
+                if($filterName && $dns['name'] !== $filterName) {
                     continue;
                 }
 
                 $filterContent = $input->getOption('filter-content');
-                if($filterContent && $dns['content'] != $filterContent) {
+                if($filterContent && $dns['content'] !== $filterContent) {
                     continue;
                 }
 
@@ -61,5 +63,7 @@ class DnsCommand extends Command
         }
 
         $table->render();
+
+        return 0;
     }
 }

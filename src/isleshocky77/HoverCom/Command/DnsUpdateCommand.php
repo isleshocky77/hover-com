@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace isleshocky77\HoverCom\Command;
 
 use isleshocky77\HoverCom\Api\Client;
@@ -14,14 +16,14 @@ class DnsUpdateCommand extends Command
 {
     protected static $defaultName = 'hover-com:dns:update';
 
-    protected function configure()
+    protected function configure() : void
     {
         $this->addArgument('dns-ids', InputArgument::IS_ARRAY, 'The dns id(s) to update');
         $this->addOption('content', null, InputOption::VALUE_REQUIRED, 'The content of the entry');
         $this->addOption('ttl', null, InputOption::VALUE_OPTIONAL, 'The ttl to use for the entry');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $api = new Client();
 
@@ -37,5 +39,7 @@ class DnsUpdateCommand extends Command
         }
 
         $table->render();
+
+        return 0;
     }
 }
