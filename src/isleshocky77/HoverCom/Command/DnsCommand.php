@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace isleshocky77\HoverCom\Command;
 
-use GuzzleHttp\Client;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableCell;
@@ -21,6 +20,7 @@ class DnsCommand extends Command
     protected function configure() : void
     {
         $this->addArgument('domains', InputArgument::IS_ARRAY, 'The domain(s) to list DNS for');
+        $this->addOption('all-domains', null, InputOption::VALUE_NONE, 'Look through all domains');
         $this->addOption('filter-type', null, InputOption::VALUE_OPTIONAL, 'The types of records to filter and show');
         $this->addOption('filter-name', null, InputOption::VALUE_OPTIONAL, 'The record names to filter and show');
         $this->addOption('filter-content', null, InputOption::VALUE_OPTIONAL, 'The record content to filter and show');
@@ -34,6 +34,9 @@ class DnsCommand extends Command
         $table->setHeaders(['ID', 'Name', 'Type', 'Content', 'TTL', 'Is Default']);
 
         $domains = $input->getArgument('domains');
+        if ($input->getOption('all-domains') === true) {
+            $domains = array_column($api->getDomains(), 'id');
+        }
         foreach ($domains as $domain) {
             $dnss = $api->getDns($domain);
             $table->addRow(new TableSeparator());
