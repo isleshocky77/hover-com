@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class LoginCommand extends Command
 {
-    protected static $defaultName = 'hover-com:login:test';
+    protected static $defaultName = 'hover-com:login';
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
