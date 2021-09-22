@@ -2,9 +2,8 @@
 
 namespace isleshocky77\HoverCom\Command;
 
-use GuzzleHttp\Client;
+use isleshocky77\HoverCom\Api\Client;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -14,7 +13,7 @@ class LoginCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $api = new \isleshocky77\HoverCom\Api\Client();
+        $api = new Client();
 
         try {
             $api->login(getenv('HOVER_USERNAME'), getenv('HOVER_PASSWORD'));
