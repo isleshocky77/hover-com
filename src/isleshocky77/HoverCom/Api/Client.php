@@ -16,7 +16,7 @@ use GuzzleHttp\Psr7\Response;
 
 class Client
 {
-    private $client;
+    private \GuzzleHttp\Client $client;
 
     public function __construct()
     {
