@@ -22,3 +22,9 @@ $ docker-compose run console
 $ docker-compose run console hover-com:login
 $ docker-compose run console hover-com:domains:list
 ```
+
+## Get a list of DNS Ids based on content
+
+```
+docker-compose run console hover-com:dns:list --filter-content="123.123.123.123" --all-domains | sed -nr 's/.*(dns[0-9]+).*/\1/p' | tr "\n" " "
+```
