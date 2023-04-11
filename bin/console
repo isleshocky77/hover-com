@@ -9,10 +9,6 @@ use isleshocky77\HoverCom\Command\DomainsCommand;
 use isleshocky77\HoverCom\Command\LoginCommand;
 use Symfony\Component\Console\Application;
 
-
-$dotenv = \Dotenv\Dotenv::create(__DIR__ . '/..');
-$dotenv->load();
-
 $application = new Application();
 
 $application->add(new LoginCommand());

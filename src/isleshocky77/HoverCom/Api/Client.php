@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace isleshocky77\HoverCom\Api;
 
+use GuzzleHttp;
 use GuzzleHttp\Cookie\FileCookieJar;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
@@ -70,14 +71,26 @@ class Client
     /**
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function login($username, $password): void
+    public function login($username, $password, $totpCode): void
     {
-        $this->client->request('POST', '/api/login', [
-            'form_params' => [
+        $this->client->request('GET', 'signin');
+
+        $request = $this->client->request('POST', 'signin/auth.json', [
+            GuzzleHttp\RequestOptions::JSON => [
                 'username' => $username,
                 'password' => $password,
+                'token' => null,
             ],
         ]);
+
+        $json = json_decode((string)$request->getBody(), false, 512, JSON_THROW_ON_ERROR);
+        if ($json->status === 'need_2fa' && $json->type === 'app') {
+            $this->client->request('POST', 'signin/auth2.json', [
+                GuzzleHttp\RequestOptions::JSON => [
+                    'code' => $totpCode,
+                ],
+            ]);
+        }
     }
 
     public function getDomains() : array
